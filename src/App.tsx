@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { BrowserRouter } from 'react-router-dom';
+import Routes from './routes/routes';
+import config from './config/config';
+import FiltersProvider from './shared/context/filtersContext';
+import OrderByDateProvider from './shared/context/orderByDateContext';
+
+const client = new ApolloClient({
+  uri: config.api,
+  cache: new InMemoryCache(),
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FiltersProvider>
+      <OrderByDateProvider>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            <Routes />
+          </BrowserRouter>
+        </ApolloProvider>
+      </OrderByDateProvider>
+    </FiltersProvider>
   );
 }
 
